@@ -459,6 +459,11 @@ def _init_modules(args, crash_handler):
     diskcache = cache.DiskCache(standarddir.cache(), parent=qApp)
     objreg.register('cache', diskcache)
 
+    # CUSTOM PLUGINS
+    log.init.debug("Initializing external-plugins...")
+    from qutebrowser.plugins import load_plugins
+    load_plugins(objreg, qApp, log)
+
     log.init.debug("Initializing completions...")
     completionmodels.init()
 
