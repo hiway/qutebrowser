@@ -171,10 +171,13 @@ class Command:
     def _check_func(self):
         """Make sure the function parameters don't violate any rules."""
         signature = inspect.signature(self.handler)
+        argspec = inspect.getfullargspec(self.handler)
         if 'self' in signature.parameters and self._instance is None:
             raise TypeError("{} is a class method, but instance was not "
                             "given!".format(self.name[0]))
-        elif 'self' not in signature.parameters and self._instance is not None:
+        elif ('self' not in signature.parameters and'self' not in argspec.args) and self._instance is not None:
+            print('*** handler', self.handler)
+            print('*** signature.parameters', signature.parameters)
             raise TypeError("{} is not a class method, but instance was "
                             "given!".format(self.name[0]))
         elif any(param.kind == inspect.Parameter.VAR_KEYWORD
