@@ -32,6 +32,7 @@ def load_plugins(objreg, parent, log):
             plugin = plugin_module.Plugin(parent=parent)
             PLUGINS.update({plugin_name: plugin})
             commands = getattr(plugin_module, 'commands', [])
+            log.init.debug("Loading plugin: {}".format(', '.join(plugin_name)))
             if commands:
                 log.init.debug("Loading commands: {}".format(', '.join(commands)))
                 [objreg.register(cmd, plugin) for cmd in commands]
@@ -39,6 +40,5 @@ def load_plugins(objreg, parent, log):
                 objreg.register(plugin_name, plugin)
         except ModuleNotFoundError:
             log.init.warning("Unable to load plugin: {}".format(plugin_name))
-        finally:
-            log.init.warning("Loaded {} plugins: {}".format(
-                len(PLUGINS), ', '.join([k for k in PLUGINS.keys()])))
+    log.init.debug("Loaded {} plugins: {}".format(
+        len(PLUGINS), ', '.join([k for k in PLUGINS.keys()])))
